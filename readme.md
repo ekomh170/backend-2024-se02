@@ -9,4 +9,4 @@
 - **Nama Dosen**: Edo Riansyah, S.Kom.
 
 ### Daftar Tugas & Project :
-1. [Tugas Pertemuan 03 - Reintroduction PHP & OOP](#)
+1. [Tugas Pertemuan 03 - Reintroduction PHP & OOP](https://github.com/ekomh170/backend-2024-se02/tree/pertemuan-3)
