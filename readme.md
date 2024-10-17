@@ -10,3 +10,4 @@
 
 ### Daftar Tugas & Project :
 1. [Tugas Pertemuan 03 - Reintroduction PHP & OOP](https://github.com/ekomh170/backend-2024-se02/tree/pertemuan-3)
+2. [Tugas Pertemuan 04 - Laravel Installation & Basics](https://github.com/ekomh170/backend-2024-se02/tree/pertemuan-4_rest-api)
