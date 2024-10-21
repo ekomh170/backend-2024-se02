@@ -24,10 +24,10 @@ class AnimalController extends Controller
         ]);
 
         $newAnimal = $request->input('animal');
-        array_push($this->animals, $newAnimal);
+        array_push($this->animals, $newAnimal); // Musang
 
         return response()->json([
-            'message' => 'Animal added successfully',
+            'message' => 'Hewan berhasil ditambahkan',
             'data' => $this->animals
         ]);
     }
@@ -42,14 +42,14 @@ class AnimalController extends Controller
 
         // Memastikan ID valid
         if (!isset($this->animals[$id])) {
-            return response()->json(['error' => 'Animal not found'], 404);
+            return response()->json(['error' => 'Hewan tidak ditemukan'], 404);
         }
 
-        // Update hewan pada index $id
+        // Update hewan pada index $id (ubah 'ayam' menjadi 'Burung')
         $this->animals[$id] = $request->input('animal');
 
         return response()->json([
-            'message' => 'Animal updated successfully',
+            'message' => 'Hewan berhasil diperbarui',
             'data' => $this->animals
         ]);
     }
@@ -59,15 +59,15 @@ class AnimalController extends Controller
     {
         // Memastikan ID valid
         if (!isset($this->animals[$id])) {
-            return response()->json(['error' => 'Animal not found'], 404);
+            return response()->json(['error' => 'Hewan tidak ditemukan'], 404);
         }
 
         // Menghapus hewan berdasarkan ID dan re-index array
         unset($this->animals[$id]);
-        $this->animals = array_values($this->animals);
+        $this->animals = array_values($this->animals); // Re-index array
 
         return response()->json([
-            'message' => 'Animal deleted successfully',
+            'message' => 'Hewan berhasil dihapus',
             'data' => $this->animals
         ]);
     }
