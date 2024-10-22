@@ -49,7 +49,7 @@ class AnimalController extends Controller
         $this->animals[$id] = $request->input('animal');
 
         return response()->json([
-            'message' => 'Hewan berhasil diperbarui',
+            'message' => 'Hewan berhasil diperbarui berdasarkan ID ' . $id,
             'data' => $this->animals
         ]);
     }
@@ -67,7 +67,7 @@ class AnimalController extends Controller
         $this->animals = array_values($this->animals); // Re-index array
 
         return response()->json([
-            'message' => 'Hewan berhasil dihapus',
+            'message' => 'Hewan berhasil dihapus berdasarkan ID ' . $id,
             'data' => $this->animals
         ]);
     }
