@@ -60,7 +60,27 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        // Validasi data input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'nim' => 'required|string|max:20',
+            'email' => 'required|email|max:255',
+            'majority' => 'required|string|max:100'
+        ]);
+
+        // Mengambil hanya data yang valid dari request
+        $input = $request->only(['name', 'nim', 'email', 'majority']);
+
+        // Update data mahasiswa
+        $student->update($input);
+
+        // Response setelah update berhasil
+        $response = [
+            'message' => 'Successfully updated student data',
+            'data' => $student
+        ];
+
+        return response()->json($response, 200);
     }
 
     /**
@@ -68,6 +88,14 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        // Hapus data mahasiswa
+        $student->delete();
+
+        // Response setelah penghapusan berhasil
+        $response = [
+            'message' => 'Successfully deleted student data'
+        ];
+
+        return response()->json($response, 200);
     }
 }
