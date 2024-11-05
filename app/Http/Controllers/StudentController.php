@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
-use Illuminate\Container\Attributes\DB;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -14,9 +15,18 @@ class StudentController extends Controller
      */
     public function index()
     {
-        // $students = DB::select('select * from students');
+        // Mengambil semua data siswa
         $students = Student::all();
 
+        // Menghandle jika data kosong
+        if ($students->isEmpty()) {
+            $response = [
+                'message' => 'No students found'
+            ];
+            return response()->json($response, 404);
+        }
+
+        // Jika data ditemukan, menyiapkan response sukses
         $response = [
             'message' => 'Success Showing All Students Data',
             'data' => $students
@@ -30,72 +40,111 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $input = [
-            'name' => $request->name,
-            'nim' => $request->nim,
-            'email' => $request->email,
-            'majority' => $request->majority
-           ];
+        // Validasi input data mahasiswa yang akan disimpan
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'nim' => 'required|string|max:20|unique:students',
+            'email' => 'required|email|max:255|unique:students',
+            'majority' => 'required|string|max:100'
+        ]);
 
-           $students = Student::create($input);
+        // Menghandle jika salah satu data tidak dikirim atau tidak valid
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
-           $response = [
-            'message' => 'Successfully create new student',
+        // Menyimpan data mahasiswa ke database
+        $students = Student::create($request->all());
+
+        // Menyiapkan response sukses setelah penyimpanan berhasil
+        $response = [
+            'message' => 'Successfully created new student',
             'data' => $students
-           ];
+        ];
 
-           return response()->json($response, 201);
+        return response()->json($response, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Student $student)
+    public function show($id)
     {
-        //
+        try {
+            // Mencari data mahasiswa berdasarkan ID, dan menghandle jika resource yang diminta tidak ada
+            $student = Student::findOrFail($id);
+
+            // Menyiapkan response sukses jika data mahasiswa ditemukan
+            $response = [
+                'message' => 'Successfully found student data',
+                'data' => $student
+            ];
+            return response()->json($response, 200);
+        } catch (ModelNotFoundException $e) {
+            // Response error jika mahasiswa tidak ditemukan
+            return response()->json(['message' => 'Student not found'], 404);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Student $student)
+    public function update(Request $request, $id)
     {
-        // Validasi data input
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'nim' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'majority' => 'required|string|max:100'
-        ]);
+        try {
+            // Mencari data mahasiswa berdasarkan ID, menghandle jika resource tidak ditemukan
+            $student = Student::findOrFail($id);
 
-        // Mengambil hanya data yang valid dari request
-        $input = $request->only(['name', 'nim', 'email', 'majority']);
+            // Validasi input data mahasiswa yang akan diupdate
+            $validator = Validator::make($request->all(), [
+                'name' => 'sometimes|required|string|max:255',
+                'nim' => 'sometimes|required|string|max:20',
+                'email' => 'sometimes|required|email|max:255',
+                'majority' => 'sometimes|required|string|max:100'
+            ]);
 
-        // Update data mahasiswa
-        $student->update($input);
+            // Menghandle jika salah satu data yang dikirim tidak valid
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
 
-        // Response setelah update berhasil
-        $response = [
-            'message' => 'Successfully updated student data',
-            'data' => $student
-        ];
+            // Melakukan update data mahasiswa hanya dengan data yang dikirim
+            $student->update($request->only(['name', 'nim', 'email', 'majority']));
 
-        return response()->json($response, 200);
+            // Menyiapkan response sukses setelah update berhasil
+            $response = [
+                'message' => 'Successfully updated student data',
+                'data' => $student
+            ];
+
+            return response()->json($response, 200);
+        } catch (ModelNotFoundException $e) {
+            // Response error jika mahasiswa tidak ditemukan
+            return response()->json(['message' => 'Student not found'], 404);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Student $student)
+    public function destroy($id)
     {
-        // Hapus data mahasiswa
-        $student->delete();
+        try {
+            // Mencari data mahasiswa berdasarkan ID, menghandle jika resource tidak ditemukan
+            $student = Student::findOrFail($id);
 
-        // Response setelah penghapusan berhasil
-        $response = [
-            'message' => 'Successfully deleted student data'
-        ];
+            // Menghapus data mahasiswa dari database
+            $student->delete();
 
-        return response()->json($response, 200);
+            // Menyiapkan response sukses setelah penghapusan berhasil
+            $response = [
+                'message' => 'Successfully deleted student data'
+            ];
+
+            return response()->json($response, 200);
+        } catch (ModelNotFoundException $e) {
+            // Response error jika mahasiswa tidak ditemukan
+            return response()->json(['message' => 'Student not found'], 404);
+        }
     }
 }
