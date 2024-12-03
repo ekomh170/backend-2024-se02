@@ -14,10 +14,7 @@ const fruits = require('../data/fruit');
  * @hint - Gunakan looping for of
  */
 const index = () => {
-  console.log("Data buah: ");
-  for (const fruit of fruits) {
-    console.log(fruit);
-  }
+  console.log(fruits.join("\n")); // Menampilkan array buah dengan line break
 };
 
 /**
@@ -31,8 +28,7 @@ const index = () => {
  * @hint - Gunakan method push
  */
 const store = (name) => {
-  fruits.push(name);
-  console.log(`Buah ${name} berhasil ditambahkan.`);
+  fruits.push(name); // Menambahkan buah baru ke array
 };
 
 /**
@@ -46,10 +42,7 @@ const store = (name) => {
  */
 const update = (position, name) => {
   if (position >= 0 && position < fruits.length) {
-    fruits[position] = name;
-    console.log(`Data buah pada posisi ${position} berhasil diperbarui menjadi ${name}.`);
-  } else {
-    console.log("Posisi tidak valid.");
+    fruits[position] = name; // Mengubah nama buah pada index tertentu
   }
 };
 
@@ -65,10 +58,7 @@ const update = (position, name) => {
  */
 const destroy = (position) => {
   if (position >= 0 && position < fruits.length) {
-    const removedFruit = fruits.splice(position, 1);
-    console.log(`Buah ${removedFruit[0]} berhasil dihapus.`);
-  } else {
-    console.log("Posisi tidak valid.");
+    fruits.splice(position, 1); // Menghapus satu elemen pada posisi tertentu
   }
 };
 
