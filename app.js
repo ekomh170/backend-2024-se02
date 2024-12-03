@@ -2,16 +2,13 @@
  * TODO 9:
  * - Import semua method FruitController
  * - Refactor variable ke ES6 Variable
- *
- * @hint - Gunakan Destructing Object
+ * @hint - Gunakan Destructuring Object
  */
-
-var importHere = "";
+const { index, store, update, destroy } = require('./controller/fruitController');
 
 /**
- * NOTES:
- * - Fungsi main tidak perlu diubah
- * - Jalankan program: node app.js
+ * Fungsi main tidak perlu diubah
+ * Jalankan program: node app.js
  */
 const main = () => {
   console.log("Method index - Menampilkan Buah");
