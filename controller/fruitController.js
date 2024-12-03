@@ -3,7 +3,7 @@
  * - import fruits dari data/fruits.js
  * - refactor variabel ke ES6 variable
  */
-var fruits = "";
+const fruits = require('../data/fruit');
 
 /**
  * TODO 4:
@@ -13,7 +13,12 @@ var fruits = "";
  *
  * @hint - Gunakan looping for of
  */
-function index() {}
+const index = () => {
+  console.log("Data buah: ");
+  for (const fruit of fruits) {
+    console.log(fruit);
+  }
+};
 
 /**
  * TODO 5:
@@ -25,7 +30,10 @@ function index() {}
  *
  * @hint - Gunakan method push
  */
-function store(name) {}
+const store = (name) => {
+  fruits.push(name);
+  console.log(`Buah ${name} berhasil ditambahkan.`);
+};
 
 /**
  * TODO 6:
@@ -36,7 +44,14 @@ function store(name) {}
  * @param {number} position - Posisi atau index yang ingin diupdate.
  * @param {string} name - Nama buah yang baru.
  */
-function update(position, name) {}
+const update = (position, name) => {
+  if (position >= 0 && position < fruits.length) {
+    fruits[position] = name;
+    console.log(`Data buah pada posisi ${position} berhasil diperbarui menjadi ${name}.`);
+  } else {
+    console.log("Posisi tidak valid.");
+  }
+};
 
 /**
  * TODO 7:
@@ -48,9 +63,16 @@ function update(position, name) {}
  *
  * @hint - Gunakan method splice
  */
-function destroy(position) {}
+const destroy = (position) => {
+  if (position >= 0 && position < fruits.length) {
+    const removedFruit = fruits.splice(position, 1);
+    console.log(`Buah ${removedFruit[0]} berhasil dihapus.`);
+  } else {
+    console.log("Posisi tidak valid.");
+  }
+};
 
 /**
  * TODO 8: export method index, store, update, dan destroy
  */
-module.exports = "";
+module.exports = { index, store, update, destroy };
