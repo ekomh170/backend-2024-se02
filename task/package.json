@@ -11,6 +11,6 @@
   "description": "Task Pertemuan 11",
   "dependencies": {
     "express": "^4.21.2",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.9"
   }
 }
