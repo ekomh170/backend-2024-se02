@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 24 Des 2024 pada 07.41
+-- Waktu pembuatan: 06 Jan 2025 pada 17.26
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -44,10 +44,10 @@ CREATE TABLE `students` (
 INSERT INTO `students` (`id`, `nama`, `nim`, `email`, `jurusan`, `created_at`, `updated_at`) VALUES
 (1, 'Edo', '001', 'edo@gmail.com', 'Informatika', '2023-10-26 19:22:25', '2023-11-02 18:57:01'),
 (2, 'Aldi', '002', 'aldi@gmail.com', 'Sistem Informasi', '2023-11-09 18:41:57', '2023-11-09 18:41:57'),
-(3, 'Hendi', '003', 'hendi@gmail.com', 'Bisnis Digital', '2023-11-09 19:55:12', '2023-11-09 19:55:12'),
 (4, 'Eko Muchamad Haryono', '0110223079', 'ekomh13@gmail.com', 'Teknik Informatika', NULL, NULL),
 (5, 'Deva Amanda Pahlevi', '0110223078', 'deva@gmail.com', 'Sistem Informasi', NULL, NULL),
-(6, 'Liza Misya Zora', '0110223055', 'lmz@gmail.com', 'UGM - Teknik Informatika', NULL, NULL);
+(6, 'Liza Misya Zora', '0110223055', 'lmz@gmail.com', 'UGM - Teknik Informatika', NULL, NULL),
+(12, 'Dinda Putri Cantika', '654321', 'dinda@example.com', 'Sistem Informasi', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -67,7 +67,7 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT untuk tabel `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

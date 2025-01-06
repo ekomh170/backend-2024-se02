@@ -1,5 +1,3 @@
-// controllers/StudentController.js
-
 const Student = require('../models/Student');
 const { validationResult } = require('express-validator');
 

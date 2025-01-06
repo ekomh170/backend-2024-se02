@@ -1,5 +1,3 @@
-// app.js
-
 // Import express dan router
 const express = require('express');
 const router = require('./routes/api'); // Pastikan path sesuai dengan struktur proyek Anda
