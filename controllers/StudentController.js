@@ -1,26 +1,47 @@
-// import Model Student
+// controllers/StudentController.js
+
 const Student = require('../models/Student');
+const { validationResult } = require('express-validator');
 
 class StudentController {
-    // menambahkan keyword async
+    /**
+     * Mengambil semua data mahasiswa
+     */
     async index(req, res) {
-        // memanggil method static all dengan async await.
-        const students = await Student.all();
+        try {
+            const students = await Student.all();
 
-        const data = {
-            message: 'Menampilkkan semua students',
-            data: students,
-        };
+            if (students.length === 0) {
+                return res.status(404).json({
+                    message: 'Tidak ada data mahasiswa ditemukan',
+                    data: [],
+                });
+            }
 
-        res.json(data);
+            res.json({
+                message: 'Menampilkan semua mahasiswa',
+                data: students,
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: 'Terjadi kesalahan saat mengambil data mahasiswa',
+                error: error.message,
+            });
+        }
     }
 
+    /**
+     * Menambahkan data mahasiswa baru
+     */
     async store(req, res) {
-        /**
-         * TODO 2: memanggil method create.
-         * Method create mengembalikan data yang baru diinsert.
-         * Mengembalikan response dalam bentuk json.
-         */
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                message: 'Validasi gagal',
+                errors: errors.array(),
+            });
+        }
+
         try {
             const { nama, nim, email, jurusan } = req.body;
             const newStudent = await Student.create({
@@ -30,46 +51,87 @@ class StudentController {
                 jurusan,
             });
 
-            const data = {
-                message: 'Menambahkan data student',
+            res.status(201).json({
+                message: 'Menambahkan data mahasiswa',
                 data: newStudent,
-            };
-
-            res.status(201).json(data);
+            });
         } catch (error) {
             res.status(500).json({
-                message: 'Terjadi kesalahan saat menambahkan data student',
+                message: 'Terjadi kesalahan saat menambahkan data mahasiswa',
                 error: error.message,
             });
         }
     }
 
-    update(req, res) {
+    /**
+     * Memperbarui data mahasiswa
+     */
+    async update(req, res) {
         const { id } = req.params;
-        const { nama } = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                message: 'Validasi gagal',
+                errors: errors.array(),
+            });
+        }
 
-        const data = {
-            message: `Mengedit student id ${id}, nama ${nama}`,
-            data: [],
-        };
+        try {
+            const existingStudent = await Student.findById(id);
+            if (!existingStudent) {
+                return res.status(404).json({
+                    message: `Mahasiswa dengan id ${id} tidak ditemukan`,
+                });
+            }
 
-        res.json(data);
+            const { nama, nim, email, jurusan } = req.body;
+            const updatedData = {
+                nama: nama || existingStudent.nama,
+                nim: nim || existingStudent.nim,
+                email: email || existingStudent.email,
+                jurusan: jurusan || existingStudent.jurusan,
+            };
+
+            const updatedStudent = await Student.update(id, updatedData);
+
+            res.json({
+                message: `Mengedit mahasiswa id ${id}`,
+                data: updatedStudent,
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: 'Terjadi kesalahan saat mengedit data mahasiswa',
+                error: error.message,
+            });
+        }
     }
 
-    destroy(req, res) {
+    /**
+     * Menghapus data mahasiswa
+     */
+    async destroy(req, res) {
         const { id } = req.params;
 
-        const data = {
-            message: `Menghapus student id ${id}`,
-            data: [],
-        };
+        try {
+            const existingStudent = await Student.findById(id);
+            if (!existingStudent) {
+                return res.status(404).json({
+                    message: `Mahasiswa dengan id ${id} tidak ditemukan`,
+                });
+            }
 
-        res.json(data);
+            await Student.destroy(id);
+            res.json({
+                message: `Menghapus mahasiswa id ${id}`,
+                data: [],
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: 'Terjadi kesalahan saat menghapus data mahasiswa',
+                error: error.message,
+            });
+        }
     }
 }
 
-// Membuat object StudentController
-const object = new StudentController();
-
-// Export object StudentController
-module.exports = object;
+module.exports = new StudentController();

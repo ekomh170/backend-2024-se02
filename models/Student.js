@@ -1,33 +1,23 @@
-// import database
+// models/Student.js
+
 const db = require('../config/database');
 
-// membuat class Model Student
 class Student {
     /**
-     * Membuat method static all.
+     * Mengambil semua data mahasiswa
      */
     static all() {
-        // return Promise sebagai solusi Asynchronous
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * from students';
-            /**
-             * Melakukan query menggunakan method query.
-             * Menerima 2 params: query dan callback
-             */
+            const sql = 'SELECT * FROM students';
             db.query(sql, (err, results) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(results);
-                }
+                if (err) reject(err);
+                else resolve(results);
             });
         });
     }
 
     /**
-     * TODO 1: Buat fungsi untuk insert data.
-     * Method menerima parameter data yang akan diinsert.
-     * Method mengembalikan data student yang baru diinsert.
+     * Menambahkan data mahasiswa baru
      */
     static create({ nama, nim, email, jurusan }) {
         return new Promise((resolve, reject) => {
@@ -37,20 +27,66 @@ class Student {
 
             db.query(sql, values, (err, results) => {
                 if (err) {
-                    reject(err);
-                } else {
-                    resolve({
-                        id: results.insertId,
-                        nama,
-                        nim,
-                        email,
-                        jurusan,
-                    });
+                    return reject(err);
                 }
+                const newId = results.insertId;
+                const selectSql = 'SELECT * FROM students WHERE id = ?';
+                db.query(selectSql, [newId], (err, results) => {
+                    if (err) reject(err);
+                    else resolve(results[0]);
+                });
+            });
+        });
+    }
+
+    /**
+     * Mencari mahasiswa berdasarkan ID
+     */
+    static findById(id) {
+        return new Promise((resolve, reject) => {
+            const sql = 'SELECT * FROM students WHERE id = ?';
+            db.query(sql, [id], (err, results) => {
+                if (err) reject(err);
+                else resolve(results[0]);
+            });
+        });
+    }
+
+    /**
+     * Memperbarui data mahasiswa
+     */
+    static update(id, { nama, nim, email, jurusan }) {
+        return new Promise((resolve, reject) => {
+            const sql =
+                'UPDATE students SET nama = ?, nim = ?, email = ?, jurusan = ? WHERE id = ?';
+            const values = [nama, nim, email, jurusan, id];
+
+            db.query(sql, values, (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                this.findById(id)
+                    .then((student) => resolve(student))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+
+    /**
+     * Menghapus data mahasiswa
+     */
+    static destroy(id) {
+        return new Promise((resolve, reject) => {
+            const sql = 'DELETE FROM students WHERE id = ?';
+            db.query(sql, [id], (err, results) => {
+                if (err) reject(err);
+                else
+                    resolve({
+                        message: `Mahasiswa dengan id ${id} berhasil dihapus.`,
+                    });
             });
         });
     }
 }
 
-// export class Student
 module.exports = Student;

@@ -1,32 +1,26 @@
-// import mysql
-const mysql = require("mysql");
+// config/database.js
 
-// import dotenv dan jalankan method config
-require("dotenv").config();
+const mysql = require('mysql');
+require('dotenv').config();
 
-// destructing object process.env
-const { DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE } = process.env;
+// Tambahkan log untuk memeriksa variabel
+console.log('DB_HOST:', process.env.DB_HOST);
+console.log('DB_USER:', process.env.DB_USER);
+console.log('DB_NAME:', process.env.DB_NAME);
 
-// update konfigurasi database dari file .env
 const db = mysql.createConnection({
-  host: DB_HOST,
-  user: DB_USERNAME,
-  password: DB_PASSWORD,
-  database: DB_DATABASE,
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
 });
 
-/**
- * Connect ke database menggunakan method connect.
- * Menerima parameter callback
- */
 db.connect((err) => {
-  if (err) {
-    console.log("Error connecting " + err.stack);
-    return;
-  } else {
-    console.log("Connected to database");
-    return;
-  }
+    if (err) {
+        console.error('Error connecting to database:', err.message);
+        process.exit(1);
+    }
+    console.log('Database terhubung!');
 });
 
 module.exports = db;
